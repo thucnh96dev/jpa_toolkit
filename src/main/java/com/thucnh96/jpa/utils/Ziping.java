@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * 
+ * @author thucnh
+ *
+ */
 public class Ziping {
 	/**
 	 * Get path of files relative to input directory.

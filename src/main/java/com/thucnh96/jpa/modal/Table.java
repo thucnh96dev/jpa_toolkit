@@ -17,5 +17,5 @@ import lombok.NoArgsConstructor;
  */
 public class Table {
 	private String name;
-    private List<Column> colums = new ArrayList<Column>();
+    private List<Column> colums ;
 }
