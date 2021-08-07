@@ -106,6 +106,8 @@ public abstract class AbstractOrmGenerate {
 
         }
         buffer.append("}");
+        ExcuteFile.createFile(this.path,entityFolder,tbNameSp(table.getName()).concat(""),buffer.toString(),pushMessageService);
+        
     }
 
 
