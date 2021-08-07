@@ -1,0 +1,51 @@
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import io.github.jhipster.web.util.HeaderUtil;
+
+public interface CommonConstant {
+	public interface Service {
+
+		final String ECODE = "errorCode";
+		final String EMESSAGE = "errorMessage";
+		final String RESULT = "result";
+
+		static ResponseEntity<Map<String, Object>> setResult(String applicationName, String message, Object data, String param, String code) {
+			return setResult(applicationName, message, data, HeaderUtil.createAlert(applicationName, message, param), code);
+		}
+
+		static ResponseEntity<Map<String, Object>> setResult(String applicationName, String message, Object data) {
+			return setResult(applicationName, message, data, HeaderUtil.createAlert(applicationName, message, HttpStatus.OK.toString()), null);
+		}
+
+		static ResponseEntity<Map<String, Object>> setResult(String applicationName, String message, Object data, String param) {
+			return setResult(applicationName, message, data, HeaderUtil.createAlert(applicationName, message, param), null);
+		}
+
+		static ResponseEntity<Map<String, Object>> setResult(String applicationName, String message, Object data, HttpHeaders headers) {
+			return setResult(applicationName, message, data, headers, null);
+		}
+
+		static ResponseEntity<Map<String, Object>> setResult(String applicationName, String message, Object data, HttpHeaders headers, String code) {
+			Map<String, Object> result = new HashMap<String, Object>();
+			if(null != code) {
+				result.put(CommonConstant.Service.ECODE, code);
+			}else {
+				result.put(CommonConstant.Service.ECODE, HttpStatus.OK.toString());
+			}
+			result.put(CommonConstant.Service.EMESSAGE, message);
+			result.put(CommonConstant.Service.RESULT, data);
+			return new ResponseEntity<>(
+				result,
+				headers,
+				HttpStatus.OK
+			);
+		}
+	}
+
+}
