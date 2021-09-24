@@ -28,7 +28,7 @@ public class JpaAnotation {
     public static final String AllArgsConstructor = "@AllArgsConstructor\n";
     public static final String Id = "@Id\n";
     public static final String GenerationType = "@GeneratedValue(strategy = GenerationType.IDENTITY)\n";
-    public static final String Column = "@Column\n";
+    public static final String Column = "@Column";
     public static final String TemporalType = "TemporalType.DATE\n";
     public static final String columnDefinition = "columnDefinition\n";
 
@@ -54,24 +54,24 @@ public class JpaAnotation {
     public static final String PathVariable = "@PathVariable\n";
     public static final String ResponseBody = "@ResponseBody\n";
     public static final String RequestBody = "@RequestBody";
-    public static final String Autowired = "@Autowired\n";
+    public static final String Autowired = " @Autowired\n";
 
     // import
     public static final String importStr = "import ";
-    public static final String importLombok = " import lombok.*;\n";
-    public static final String importSpringframeworkUtil = " import org.springframework.util.*;\n";
-    public static final String javaxPersistence = " import javax.persistence.*;\n";
-    public static final String javaxPersistenceCriteria = " import javax.persistence.criteria.*;\n";
-    public static final String importJavaUtil = " import java.util.*;\n";
-    public static final String importRepository = " import org.springframework.stereotype.Repository;\n";
-    public static final String importJpaRepository = " import org.springframework.data.jpa.repository.JpaRepository;\n";
-    public static final String importService = " import org.springframework.stereotype.Service;\n";
-    public static final String importDataDomain= " import org.springframework.data.domain.*;\n";
-    public static final String importController= " import org.springframework.stereotype.Controller;\n";
-    public static final String importWebBindAnnotation= " import org.springframework.web.bind.annotation.*;\n";
-    public static final String importHttpServletRequest= " import org.springframework.http.*;\n";
-    public static final String importServletHttp= " import javax.servlet.http.HttpServletRequest;\n";
-    public static final String importAutowired= " import org.springframework.beans.factory.annotation.Autowired;\n";
+    public static final String importLombok = "import lombok.*;\n";
+    public static final String importSpringframeworkUtil = "import org.springframework.util.*;\n";
+    public static final String javaxPersistence = "import javax.persistence.*;\n";
+    public static final String javaxPersistenceCriteria = "import javax.persistence.criteria.*;\n";
+    public static final String importJavaUtil = "import java.util.*;\n";
+    public static final String importRepository = "import org.springframework.stereotype.Repository;\n";
+    public static final String importJpaRepository = "import org.springframework.data.jpa.repository.JpaRepository;\n";
+    public static final String importService = "import org.springframework.stereotype.Service;\n";
+    public static final String importDataDomain= "import org.springframework.data.domain.*;\n";
+    public static final String importController= "import org.springframework.stereotype.Controller;\n";
+    public static final String importWebBindAnnotation= "import org.springframework.web.bind.annotation.*;\n";
+    public static final String importHttpServletRequest= "import org.springframework.http.*;\n";
+    public static final String importServletHttp= "import javax.servlet.http.HttpServletRequest;\n";
+    public static final String importAutowired= "import org.springframework.beans.factory.annotation.Autowired;\n";
 
 
 

@@ -8,6 +8,7 @@ import com.thucnh96.jpa.connector.DataSourceConnector;
 import com.thucnh96.jpa.constants.JpaConstants;
 import com.thucnh96.jpa.converter.AbstractOrmMappingDataConverter;
 import com.thucnh96.jpa.modal.Table;
+import com.thucnh96.jpa.modal.payload.ProjectIto;
 import com.thucnh96.jpa.service.PushMessageService;
 import com.thucnh96.jpa.service.schema.Schema;
 import com.thucnh96.jpa.service.schema.SchemaFactory;
@@ -19,52 +20,31 @@ import com.thucnh96.jpa.service.schema.SchemaFactory;
  */
 public class MysqlOrmGenerate extends AbstractOrmGenerate {
 
-	String path;
-	String entityFolder;
-	String serviceFolder;
-	String repositoryFolder;
-	String controllerFolder;
-	String projectPackage;
-	String dtoFolder;
-	String specFolder;
-	String urlDataSource;
-    String userName;
-    String passWord;
-	AbstractOrmMappingDataConverter abstractOrmMappingDataConverter;
 
-	public MysqlOrmGenerate(String path, String entityFolder, String serviceFolder,
-			String repositoryFolder, String controllerFolder, String projectPackage, String dtoFolder,
-			String specFolder,String urlDataSource, String userName,  String passWord,
-			PushMessageService pushMessageService,AbstractOrmMappingDataConverter abstractOrmMappingDataConverter) {
-		super(path,abstractOrmMappingDataConverter, pushMessageService);
-		this.path = path;
-		this.entityFolder = entityFolder;
-		this.serviceFolder = serviceFolder;
-		this.repositoryFolder = repositoryFolder;
-		this.controllerFolder = controllerFolder;
-		this.projectPackage = projectPackage;
-		this.dtoFolder = dtoFolder;
-		this.specFolder = specFolder;
-		this.urlDataSource = urlDataSource;
-		this.userName = userName;
-		this.passWord = passWord;
-		this.abstractOrmMappingDataConverter = abstractOrmMappingDataConverter;
+    private ProjectIto project;
+
+	public MysqlOrmGenerate(
+			ProjectIto project,
+			PushMessageService pushMessageService,
+			AbstractOrmMappingDataConverter abstractOrmMappingDataConverter) {
+		super(project.getPath(),abstractOrmMappingDataConverter, pushMessageService);
+		this.project = project;
 	}
 	
 	public void genProgress() throws Exception {
-		Connection connection = DataSourceConnector.getConnection(urlDataSource,userName,passWord);
+		Connection connection = DataSourceConnector.getConnection(project.getUrl(),project.getUsername(),project.getPassword());
 		Schema mysqlSchema = SchemaFactory.getSchema(JpaConstants.DbType.MYSQL,connection);
 	    List<Table>	tables = mysqlSchema.getTables();
 		for (Table table : tables){
-			this.bodyItoAndDto(table,this.projectPackage,this.dtoFolder);
-			this.bodyEntity(table,this.projectPackage,this.entityFolder);
-			this.bodyRepository(table,this.projectPackage,this.repositoryFolder,this.entityFolder);
-			this.bodySpec(table,this.projectPackage,this.entityFolder,this.specFolder);
-			this.bodyService(table,this.projectPackage,this.serviceFolder,this.entityFolder,this.dtoFolder);
-			this.bodyServiceImpl(table,this.projectPackage,this.serviceFolder,this.repositoryFolder,this.entityFolder,this.dtoFolder,this.specFolder);
-			this.bodyController(table,this.projectPackage,this.controllerFolder,this.serviceFolder,this.entityFolder,this.dtoFolder);
+			this.bodyItoAndDto(table,this.project.getPackages(),this.project.getDtoFolder());
+			this.bodyEntity(table,this.project.getPackages(),this.project.getEntityFolder());
+			this.bodyRepository(table,this.project.getPackages(),this.project.getRepositoryFolder(),this.project.getEntityFolder());
+			this.bodySpec(table,this.project.getPackages(),this.project.getEntityFolder(),this.project.getSepcFolder());
+			this.bodyService(table,this.project.getPackages(),this.project.getServiceFolder(),this.project.getEntityFolder(),this.project.getDtoFolder());
+			this.bodyServiceImpl(table,this.project.getPackages(),this.project.getServiceFolder(),this.project.getRepositoryFolder(),this.project.getEntityFolder(),this.project.getDtoFolder(),this.project.getSepcFolder());
+			this.bodyController(table,this.project.getPackages(),this.project.getRestFolder(),this.project.getServiceFolder(),this.project.getEntityFolder(),this.project.getDtoFolder());
 		}
-		CommonSource commonSource = new CommonSource(this.path,this.projectPackage);
+		CommonSource commonSource = new CommonSource(this.path,this.project.getPackages());
 		commonSource.run();
 	 }
 	

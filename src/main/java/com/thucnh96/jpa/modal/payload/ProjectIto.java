@@ -33,4 +33,6 @@ public class ProjectIto {
 
     @NonNull
     private String type;
+
+    private String path;
 }

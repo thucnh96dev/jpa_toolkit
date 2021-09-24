@@ -47,8 +47,8 @@ public abstract class AbstractOrmGenerate {
                 .append(JpaAnotation.NoArgsConstructor)
                 .append(JpaAnotation.AllArgsConstructor)
                 .append(JpaAnotation.Entity)
-                .append(" @Table(name = \"" +tableName+ "\") \n")
-                .append(" public class "+tbNameSp(tableName)+" ").append("{ ")
+                .append("@Table(name = \"" +tableName+ "\") \n")
+                .append("public class "+tbNameSp(tableName)+" ").append("{ ")
                 .append("\n").append("\n");
         return buffer.toString();
     }
@@ -191,7 +191,7 @@ public abstract class AbstractOrmGenerate {
     protected  void bodyRepository(Table table,String packageProject,String repositoryFolder,String entityFolder ) throws IOException {
         StringBuffer buffer = new StringBuffer();
         buffer.append(" package ").append(packageProject).append(".").append(repositoryFolder).append("; \n")
-                .append(" import ").append(packageProject).append(entityFolder).append(".").append(tbNameSp(table.getName())).append(";").append("\n")
+                .append(" import ").append(packageProject).append(".").append(entityFolder).append(".").append(tbNameSp(table.getName())).append(";").append("\n")
                 .append(JpaAnotation.importJpaRepository)
                 .append(JpaAnotation.importRepository)
                 .append("\n")
@@ -276,7 +276,7 @@ public abstract class AbstractOrmGenerate {
                 .append(JpaAnotation.importDataDomain)
                 .append(JpaAnotation.importService)
                 .append(JpaAnotation.importAutowired)
-                .append("import vn.unitech.qtht.utils.DTOmapper; \n")
+                .append(JpaAnotation.importStr).append(packageProject).append(".").append("utils").append(".").append("DTOmapper;").append("\n")
                 .append(JpaAnotation.importStr).append(packageProject).append(".").append(repoFolder).append(".").append(tabaleName).append("Repository;").append("\n")
                 .append(JpaAnotation.importStr).append(packageProject).append(".").append(specFolder).append(".").append(tabaleName).append("Spec;").append("\n")
                 .append(JpaAnotation.importStr).append(packageProject).append(".").append(entityFolder).append(".").append(tabaleName).append(";").append("\n")
@@ -290,7 +290,6 @@ public abstract class AbstractOrmGenerate {
                 .append(" */ ").append("\n")
                 .append("\n")
                 .append(JpaAnotation.Service)
-                .append("\n")
                 .append("public class ").append(" ").append(tabaleName).append("ServiceImpl").append(" implements ")
                 .append(tabaleName).append("Service ").append("{ ")
                 .append("\n").append("\n")
@@ -446,9 +445,8 @@ public abstract class AbstractOrmGenerate {
                 .append("\n")
                 .append("\n")
                 .append("@Value(\"${jhipster.clientApp.name}\")").append("\n")
-                .append("private String applicationName;").append("\n")
+                .append("private String applicationName;").append("\n").append("\n")
                 .append(JpaAnotation.Autowired)
-                .append("\n")
                 .append("private ").append(serviceName).append(" ")
                 .append(tablename.toLowerCase()).append(JpaAnotation.Service)
                 .append("\n");
@@ -503,21 +501,21 @@ public abstract class AbstractOrmGenerate {
 
                   StringBuffer  bufferDelete = new StringBuffer();
                    bufferDelete
-                        .append("@DeleteMapping(value = \"/"+tablename.toLowerCase()+ "/{id}\")"    ).append("\n")
-                        .append("public ResponseEntity<Void> delete+"+tablename+"(@PathVariable Long id) { ").append("\n")
+                        .append(" @DeleteMapping(value = \"/"+tablename.toLowerCase()+ "/{id}\")"    ).append("\n")
+                        .append(" public ResponseEntity<Void> delete"+tablename+"(@PathVariable Long id) { ").append("\n")
                         .append("       log.debug(\"REST request to delete  : {}\", id); ").append("\n")
                         .append("       "+serviceNameVar+".deleteById(id);").append("\n")
                         .append("  return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, \""+tablename+"\", id.toString())).build(); ").append("\n")
-                        .append("}").append("\n");
+                        .append(" }").append("\n");
                 buffer.append(bufferDelete);
                 StringBuffer  bufferDeleteS = new StringBuffer();
                 bufferDeleteS
-                .append("@DeleteMapping(value = \"/"+tablename.toLowerCase()+ "/deletes\")"    ).append("\n")
-                .append("public ResponseEntity<Void> delete+"+tablename+"(@RequestBody Set<Long> ids) { ").append("\n")
+                .append(" @DeleteMapping(value = \"/"+tablename.toLowerCase()+ "/deletes\")"    ).append("\n")
+                .append(" public ResponseEntity<Void> delete"+tablename+"(@RequestBody Set<Long> ids) { ").append("\n")
                 .append("       log.debug(\"REST request to delete  : {}\", ids); ").append("\n")
                 .append("       "+serviceNameVar+".deleteByIds(ids);").append("\n")
                 .append("  return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, \""+tablename+"\", ids.toString())).build(); ").append("\n")
-                .append("}").append("\n");
+                .append(" }").append("\n");
                  buffer.append(bufferDeleteS);
 
         buffer.append("}").append("\n");
