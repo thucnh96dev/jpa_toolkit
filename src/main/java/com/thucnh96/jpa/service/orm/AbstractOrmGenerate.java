@@ -578,4 +578,5 @@ public abstract class AbstractOrmGenerate {
         return result ;
     }
 
+    public abstract void genProgress() throws Exception;
 }

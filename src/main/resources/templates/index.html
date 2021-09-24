@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>jpa tool</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+    .input {
+        display: block;
+        border: 0;
+        outline: none;
+        border-bottom: 3px solid #000;
+        line-height: 16px;
+        font-family: "Metropolis",Arial,sans-serif;
+        font-size: 12px;
+        box-sizing: border-box;
+        background-clip: padding-box;
+        width: 100%;
+        padding: .35rem 0 .55rem;
+        border-radius: 0;
+        background: #fff;
+        font-weight: 300;
+        color: #000;
+        background: #fff;
+    }
+    .inputselect{
+        border: 0;
+        border: 3px solid #000;
+    }
+    .inputselect:focus {
+        border-color: #6db33f;
+    }
+    label {
+        font-weight: 500;
+        flex: 110px 0;
+    }
+    .input:focus {
+        border-color: #6db33f;
+    }
+    .form-control:focus{
+        box-shadow:none;
+    }
+    #log-viewer{
+        font-family: monospace;
+        background: black;
+        color: white;
+    }
+    .row{
+        margin-right: 0px !important;
+        margin-left: 0px !important;
+    }
+    body{
+        background: var(--bg-color);
+        color: var(--text-color);
+    }
+</style>
+</head>
+<body>
+<div class="row justify-content-center" id="main_page">
+    <div class="col-sm-8">
+        <form id="form_init_project"  >
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="username">Username</label>
+                    <input type="email"  value="root" class="form-control input" id="username" placeholder="Username">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control input" id="password" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <label for="urlconnection">Connection</label>
+                    <input type="text" value="jdbc:postgresql://" placeholder="jdbc:" class="form-control input" id="urlconnection">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="dbtype">Type</label>
+                    <select id="dbtype" class="form-control inputselect">
+                        <option th:each="data:${type}" th:text="${data}" th:value="${data}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="entityFolder">Entity Folder</label>
+                    <input type="text" placeholder="domain" value="domain" class="form-control input" id="entityFolder">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="dtoFolder">Dto Folder</label>
+                    <input type="text" placeholder="dto" value="dto" class="form-control input" id="dtoFolder">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="repositoryFolder">Repository Folder</label>
+                    <input type="text" placeholder="repository" value="repository" class="form-control input" id="repositoryFolder">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="sepcFolder">Spec Folder</label>
+                    <input type="text" placeholder="specification" value="specification" class="form-control input" id="sepcFolder">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="serviceFolder">Service Folder</label>
+                    <input type="text" placeholder="service" value="service"  class="form-control input" id="serviceFolder">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="restFolder">Rest Folder</label>
+                    <input type="text" placeholder="resource" value="resource" class="form-control input" id="restFolder">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="packages">Package</label>
+                    <input type="text" placeholder="package" value="com.example" class="form-control input" id="packages">
+                </div>
+            </div>
+        </form>
+        <button  onclick="gen();" class="btn btn-primary  col-md-12" style="float: right;">Gen</button>
+        <form>
+            <div class="form-row">
+                <div class="col-sm-12">
+                    <form id="form_log_project"  >
+                        <div class="form-row">
+                            <div class="form-group col-sm-12">
+                                <textarea  type="text" rows="10" readonly  class="form-control" id="log-viewer"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/webjars/sockjs-client/1.0.2/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+
+<script>
+    var stompClient = null;
+        var socket = new SockJS('/notification', null, {
+            'protocols_whitelist': ['websocket']
+        });
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/channel/progress', function (data) {
+                  const log = data.body;
+                  var currentLog =$('#log-viewer').text();
+                  $('#log-viewer').text(currentLog + ' '+ log + '\n');
+            });
+        });
+    function gen() {
+        var username =  $('#username').val();
+        var password =  $('#password').val();
+        var urldb =  $('#urlconnection').val();
+        var type =  $('#dbtype').val();
+        var packages =  $('#packages').val();
+        var entityFolder =  $('#entityFolder').val();
+        var repositoryFolder =  $('#repositoryFolder').val();
+        var serviceFolder =  $('#serviceFolder').val();
+        var dtoFolder =  $('#dtoFolder').val();
+        var restFolder =  $('#restFolder').val();
+        var sepcFolder =  $('#sepcFolder').val();
+        var project = {
+            "packages": packages,
+            "entityFolder":entityFolder,
+            "repositoryFolder":repositoryFolder,
+            "serviceFolder":serviceFolder,
+            "dtoFolder":dtoFolder,
+            "restFolder":restFolder,
+            "sepcFolder":sepcFolder,
+            'username' : username,
+            'password': password,
+            'url' : urldb,
+            'type' : type,
+        }
+        $.ajax({
+            url: '/generate',
+            data: JSON.stringify(project),
+            contentType: "application/json; charset=utf-8",
+            type: 'POST',
+            xhrFields: { responseType: "blob" },
+            success: function (result, textStatus, jQxhr) {
+                const url = window.URL.createObjectURL(result);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'project.zip'); //or any other extension
+                document.body.appendChild(link);
+                link.click();
+            },
+            error: function (error) {
+                alert(JSON.stringify(error));
+            }
+        });
+    }
+</script>
+</body>
+</html>

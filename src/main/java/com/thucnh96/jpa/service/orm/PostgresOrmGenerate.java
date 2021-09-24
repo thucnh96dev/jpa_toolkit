@@ -1,16 +1,16 @@
 package com.thucnh96.jpa.service.orm;
 
-import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
+import com.thucnh96.jpa.component.CommonSource;
 import com.thucnh96.jpa.connector.DataSourceConnector;
+import com.thucnh96.jpa.constants.JpaConstants;
 import com.thucnh96.jpa.converter.AbstractOrmMappingDataConverter;
 import com.thucnh96.jpa.modal.Table;
 import com.thucnh96.jpa.service.PushMessageService;
-import com.thucnh96.jpa.service.mapping.MysqlSchema;
-import com.thucnh96.jpa.service.mapping.PostgresSchema;
+import com.thucnh96.jpa.service.schema.Schema;
+import com.thucnh96.jpa.service.schema.SchemaFactory;
 
 /**
  * 
@@ -18,8 +18,7 @@ import com.thucnh96.jpa.service.mapping.PostgresSchema;
  *
  */
 public class PostgresOrmGenerate extends AbstractOrmGenerate {
-	
-	List<Table> tables;
+
 	String entityFolder;
 	String serviceFolder;
 	String repositoryFolder;
@@ -32,12 +31,11 @@ public class PostgresOrmGenerate extends AbstractOrmGenerate {
     String passWord;
 	AbstractOrmMappingDataConverter abstractOrmMappingDataConverter;
 
-	public PostgresOrmGenerate(List<Table> tables, String path, String entityFolder, String serviceFolder,
+	public PostgresOrmGenerate(String path, String entityFolder, String serviceFolder,
 			String repositoryFolder, String controllerFolder, String projectPackage, String dtoFolder,
 			String specFolder, String urlDataSource, String userName,  String passWord,
 			PushMessageService pushMessageService,AbstractOrmMappingDataConverter abstractOrmMappingDataConverter) {
 		super(path,abstractOrmMappingDataConverter, pushMessageService);
-		this.tables = tables;
 		this.entityFolder = entityFolder;
 		this.serviceFolder = serviceFolder;
 		this.repositoryFolder = repositoryFolder;
@@ -50,19 +48,21 @@ public class PostgresOrmGenerate extends AbstractOrmGenerate {
 		this.passWord = passWord;
 	}
 	
-	public void genProgress() throws IOException, SQLException {
+	public void genProgress() throws Exception {
 		Connection connection = DataSourceConnector.getConnection(urlDataSource,userName,passWord);
-		PostgresSchema mysqlSchema = new PostgresSchema(connection);
-		this.tables = mysqlSchema.getTables();
-	        for (Table table : tables){
-	            this.bodyItoAndDto(table,this.projectPackage,this.dtoFolder);
-	            this.bodyEntity(table,this.projectPackage,this.entityFolder);
-	            this.bodyRepository(table,this.projectPackage,this.repositoryFolder,this.entityFolder);
-	            this.bodySpec(table,this.projectPackage,this.entityFolder,this.specFolder);
-	            this.bodyService(table,this.projectPackage,this.serviceFolder,this.entityFolder,this.dtoFolder);
-	            this.bodyServiceImpl(table,this.projectPackage,this.serviceFolder,this.repositoryFolder,this.entityFolder,this.dtoFolder,this.specFolder);
-	            this.bodyController(table,this.projectPackage,this.controllerFolder,this.serviceFolder,this.entityFolder,this.dtoFolder);
-	        }
+		Schema mysqlSchema = SchemaFactory.getSchema(JpaConstants.DbType.POSTGRES,connection);
+		List<Table> tables = mysqlSchema.getTables();
+		for (Table table : tables){
+			this.bodyItoAndDto(table,this.projectPackage,this.dtoFolder);
+			this.bodyEntity(table,this.projectPackage,this.entityFolder);
+			this.bodyRepository(table,this.projectPackage,this.repositoryFolder,this.entityFolder);
+			this.bodySpec(table,this.projectPackage,this.entityFolder,this.specFolder);
+			this.bodyService(table,this.projectPackage,this.serviceFolder,this.entityFolder,this.dtoFolder);
+			this.bodyServiceImpl(table,this.projectPackage,this.serviceFolder,this.repositoryFolder,this.entityFolder,this.dtoFolder,this.specFolder);
+			this.bodyController(table,this.projectPackage,this.controllerFolder,this.serviceFolder,this.entityFolder,this.dtoFolder);
+		}
+		CommonSource commonSource = new CommonSource(this.path,this.projectPackage);
+		commonSource.run();
 	 }
 
 }
