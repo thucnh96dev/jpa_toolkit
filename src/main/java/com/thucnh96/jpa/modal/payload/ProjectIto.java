@@ -35,4 +35,6 @@ public class ProjectIto {
     private String type;
 
     private String path;
+
+    private boolean genDoc;
 }

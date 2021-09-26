@@ -1,9 +1,12 @@
 package com.thucnh96.jpa.service.orm;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.thucnh96.jpa.service.doc.GenDocument;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -13,6 +16,7 @@ import com.thucnh96.jpa.modal.Column;
 import com.thucnh96.jpa.modal.Table;
 import com.thucnh96.jpa.progress.ExcuteFile;
 import com.thucnh96.jpa.service.PushMessageService;
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * 
