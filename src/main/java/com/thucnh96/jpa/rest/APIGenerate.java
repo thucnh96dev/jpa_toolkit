@@ -11,6 +11,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,14 +42,15 @@ public class APIGenerate {
             project.setPath(folderTemp);
             Orm orm = OrmFactory.getOrm(convertToOrm(project.getType()));
             orm.gen(project,pushMessageService);
-            projectZip(folderTemp,response);
+            projectZip(folderTemp,project.getProjectName(),response);
         }catch (Exception e){
             pushMessageService.sendMessage(e.getMessage());
         }
     }
 
-    private void projectZip(String folderTemp,HttpServletResponse response) throws IOException {
-        String zip_file_name = folderTemp.concat(File.separator).concat("project.zip");
+    private void projectZip(String folderTemp,String projectName,HttpServletResponse response) throws IOException {
+        String projectNameFolder = StringUtils.isEmpty(projectName) ? "project.zip" : projectName.trim().concat(".zip");
+        String zip_file_name = folderTemp.concat(File.separator).concat(projectNameFolder);
         File inputDirectory = new File(folderTemp);
         File outputZip = new File(zip_file_name);
         outputZip.getParentFile().mkdirs();
@@ -67,7 +69,7 @@ public class APIGenerate {
         Ziping.createZipFile(listFiles, inputDirectory, zipOutputStream);
         InputStream inputStream = new FileInputStream(outputZip);
         response.setContentType("application/force-download");
-        response.setHeader("Content-Disposition", "attachment; filename="+"project.zip");
+        response.setHeader("Content-Disposition", "attachment; filename="+projectNameFolder);
         IOUtils.copy(inputStream, response.getOutputStream());
         response.flushBuffer();
         inputStream.close();
