@@ -32,7 +32,7 @@ public class BodyAPI<T extends Object> {
     public BodyAPI(T data){
         this.timestamp =  new Date();
         this.code = HttpStatus.OK.value();
-        this.message = HttpStatus.OK.toString();
+        this.message = "SUCCESS";
         this.data = data;
     }
 

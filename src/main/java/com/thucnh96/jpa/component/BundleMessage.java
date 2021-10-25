@@ -87,8 +87,7 @@ public class BundleMessage {
      * @return
      */
     public Object getMessageBundle(String key, String baseName ){
-        ResourceBundle bundle = ResourceBundle.getBundle(baseName, Locale.getDefault());
-        return  bundle.getObject(key);
+        return  getMessageBundleSource(key,baseName,new Object[]{},Locale.getDefault());
     }
 
     /**
@@ -99,7 +98,6 @@ public class BundleMessage {
      * @return
      */
     public Object getMessageBundle(String key,String baseName,Locale locale){
-        ResourceBundle bundle = ResourceBundle.getBundle(baseName);
         return   getMessageBundleSource(key,baseName,new Object[]{},locale);
     }
 
@@ -111,7 +109,6 @@ public class BundleMessage {
      * @return
      */
     public Object getMessageBundle(String key,String baseName,Object[] args){
-        ResourceBundle bundle = ResourceBundle.getBundle(baseName);
         return getMessageBundleSource(key,baseName,args,Locale.getDefault());
     }
 
@@ -124,7 +121,6 @@ public class BundleMessage {
      * @return
      */
     public Object getMessageBundle(String key,String baseName,Object[] args, Locale locale){
-        ResourceBundle bundle = ResourceBundle.getBundle(baseName);
         return getMessageBundleSource(key,baseName,args,locale);
     }
 
