@@ -39,7 +39,8 @@ public class APICronjob extends AbstractAPI {
             if (cronType == null){
                 cronType = CronType.QUARTZ;
             }
-            Map<String, Object> crons = getTextCron(expression,cronType,Locale.getDefault(),new Locale("vi","VN"));
+            Locale locale = request.getLocale(); //new Locale("vi","VN");
+            Map<String, Object> crons = getTextCron(expression,cronType,Locale.getDefault(),locale);
             result.put("crons", crons);
             result.put("cronType", cronType);
         } catch (Exception e) {
@@ -57,7 +58,8 @@ public class APICronjob extends AbstractAPI {
         Map<String, Object> result = new HashMap<>();
         String message ;
         try {
-            Map<String, Object> crons = getTextCron(expression,CronType.SPRING,Locale.getDefault(),new Locale("vi","VN"));
+            Locale locale = request.getLocale(); //new Locale("vi","VN");
+            Map<String, Object> crons = getTextCron(expression,CronType.SPRING,Locale.getDefault(),locale);
             result.put("crons", crons);
             SchedulingRunnable task = new SchedulingRunnable("demologTask", "taskWithParams", "haha", 23);
             cronTaskRegistrar.addCronTask(task,expression);

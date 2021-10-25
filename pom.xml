@@ -13,6 +13,16 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>jpa_tool</name>
 	<description>JPA tool gen java code.</description>
+
+	<developers>
+		<developer>
+			<id>thucnh96</id>
+			<email>thucnh96.dev@gmail.com</email>
+			<name>Thuc Trung Nguyen</name>
+			<timezone>vi-VN</timezone>
+		</developer>
+	</developers>
+
 	<properties>
 		<java.version>11</java.version>
 	</properties>
