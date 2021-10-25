@@ -5,17 +5,14 @@ import com.cronutils.model.CronType;
 import com.cronutils.model.definition.CronDefinition;
 import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.parser.CronParser;
+import com.thucnh96.jpa.cronJob.application.SchedulingRunnable;
+import com.thucnh96.jpa.cronJob.config.CronTaskRegistrar;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * @author : thucnh
@@ -26,44 +23,68 @@ import java.util.ResourceBundle;
 @RequestMapping(value = "/cronjob")
 public class APICronjob extends AbstractAPI {
 
-        String prefixJson = "cronDes_";
 
-        @GetMapping(value = "/convert")
-        public ResponseEntity<Object> cronJobConverter(
-                @RequestParam(name = "expression") String expression,
-                @RequestParam(name = "cronType",required = false) CronType cronType,
-                HttpServletRequest  request) {
-            Map<String, Object> result = new HashMap<>();
-            try {
-                if (cronType == null){
-                    cronType = CronType.QUARTZ;
-                }
-                Map<String, Object> crons = getTextCron(expression,cronType,Locale.getDefault(),new Locale("vi","VN"));
-                result.put("crons", crons);
-                result.put("cronType", cronType);
-            } catch (Exception e) {
-                result.put("msg", e.getMessage());
-            }
-            String ip = getRemoteIp(request);
-            result.put("ip",ip);
-            return toResponse(result);
-        }
+    @Autowired
+    private CronTaskRegistrar cronTaskRegistrar;
 
-        private Map<String, Object> getTextCron(String expression,CronType cronType, Locale... locales){
-            Map<String, Object> result = new HashMap<>();
-            ResourceBundle resourceBundle;
-            CronDefinition cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(cronType);
-            CronParser parser = new CronParser(cronDefinition);
-            for (Locale locale : locales){
-                if ( null == locale ){
-                    resourceBundle  =  ResourceBundle.getBundle("message", Locale.getDefault());
-                }else {
-                    resourceBundle  =  ResourceBundle.getBundle("message", locale);
-                }
-                CronDescriptor descriptor = new CronDescriptor(resourceBundle);
-                String  crontext = descriptor.describe(parser.parse(expression));
-                result.put(prefixJson.concat(locale.getLanguage()),crontext);
+    String prefixJson = "cronDes_";
+
+    @GetMapping(value = "/convert")
+    public ResponseEntity<Object> cronJobConverter(
+            @RequestParam(name = "expression") String expression,
+            @RequestParam(name = "cronType",required = false) CronType cronType,
+            HttpServletRequest  request) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            if (cronType == null){
+                cronType = CronType.QUARTZ;
             }
-            return  result;
+            Map<String, Object> crons = getTextCron(expression,cronType,Locale.getDefault(),new Locale("vi","VN"));
+            result.put("crons", crons);
+            result.put("cronType", cronType);
+        } catch (Exception e) {
+            result.put("msg", e.getMessage());
         }
+        String ip = getRemoteIp(request);
+        result.put("ip",ip);
+        return toResponse(result);
+    }
+
+    @GetMapping()
+    public ResponseEntity<Object> addConJob(
+            @RequestParam(name = "expression") String expression,
+            HttpServletRequest  request) {
+        Map<String, Object> result = new HashMap<>();
+        String message ;
+        try {
+            Map<String, Object> crons = getTextCron(expression,CronType.SPRING,Locale.getDefault(),new Locale("vi","VN"));
+            result.put("crons", crons);
+            SchedulingRunnable task = new SchedulingRunnable("demologTask", "taskWithParams", "haha", 23);
+            cronTaskRegistrar.addCronTask(task,expression);
+            message = "RUNNING";
+        } catch (Exception e) {
+            message = e.getMessage();
+        }
+        String ip = getRemoteIp(request);
+        result.put("ip",ip);
+        return toResponse(result, message);
+    }
+
+    private Map<String, Object> getTextCron(String expression,CronType cronType, Locale... locales){
+        Map<String, Object> result = new HashMap<>();
+        ResourceBundle resourceBundle;
+        CronDefinition cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(cronType);
+        CronParser parser = new CronParser(cronDefinition);
+        for (Locale locale : locales){
+            if ( null == locale ){
+                resourceBundle  =  ResourceBundle.getBundle("message", Locale.getDefault());
+            }else {
+                resourceBundle  =  ResourceBundle.getBundle("message", locale);
+            }
+            CronDescriptor descriptor = new CronDescriptor(resourceBundle);
+            String  crontext = descriptor.describe(parser.parse(expression));
+            result.put(prefixJson.concat(locale.getLanguage()),crontext);
+        }
+        return  result;
+    }
 }

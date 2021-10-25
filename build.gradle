@@ -26,6 +26,7 @@ dependencies {
     implementation 'org.apache.poi:poi:4.1.2'
     implementation 'org.apache.poi:poi-ooxml:4.1.2'
     implementation 'com.cronutils:cron-utils:9.1.5'
+    implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.5.4'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools:2.5.3'
     runtimeOnly 'com.h2database:h2:1.4.200'
     runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc:9.2.1.jre8'
