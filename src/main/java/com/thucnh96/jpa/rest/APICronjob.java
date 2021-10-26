@@ -5,6 +5,7 @@ import com.cronutils.model.CronType;
 import com.cronutils.model.definition.CronDefinition;
 import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.parser.CronParser;
+import com.thucnh96.jpa.component.BundleMessage;
 import com.thucnh96.jpa.cronJob.application.SchedulingRunnable;
 import com.thucnh96.jpa.cronJob.config.CronTaskRegistrar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class APICronjob extends AbstractAPI {
     @Autowired
     private CronTaskRegistrar cronTaskRegistrar;
 
+    @Autowired
+    private BundleMessage bundleMessage;
+
     String prefixJson = "cronDes_";
 
     @GetMapping(value = "/convert")
@@ -40,9 +44,11 @@ public class APICronjob extends AbstractAPI {
                 cronType = CronType.QUARTZ;
             }
             Locale locale = request.getLocale(); //new Locale("vi","VN");
-            Map<String, Object> crons = getTextCron(expression,cronType,Locale.getDefault(),locale);
+            Map<String, Object> crons = getTextCron(expression,cronType,DEFAULT,locale);
             result.put("crons", crons);
             result.put("cronType", cronType);
+            String msg = (String) bundleMessage.getMessage("test.api",VIETNAM);
+            result.put("bundleMessage", msg);
         } catch (Exception e) {
             result.put("msg", e.getMessage());
         }
@@ -59,7 +65,7 @@ public class APICronjob extends AbstractAPI {
         String message ;
         try {
             Locale locale = request.getLocale(); //new Locale("vi","VN");
-            Map<String, Object> crons = getTextCron(expression,CronType.SPRING,Locale.getDefault(),locale);
+            Map<String, Object> crons = getTextCron(expression,CronType.SPRING,DEFAULT,locale);
             result.put("crons", crons);
             SchedulingRunnable task = new SchedulingRunnable("demologTask", "taskWithParams", "haha", 23);
             cronTaskRegistrar.addCronTask(task,expression);
@@ -79,9 +85,9 @@ public class APICronjob extends AbstractAPI {
         CronParser parser = new CronParser(cronDefinition);
         for (Locale locale : locales){
             if ( null == locale ){
-                resourceBundle  =  ResourceBundle.getBundle("message", Locale.getDefault());
+                resourceBundle  =  ResourceBundle.getBundle("i18n/message", DEFAULT);
             }else {
-                resourceBundle  =  ResourceBundle.getBundle("message", locale);
+                resourceBundle  =  ResourceBundle.getBundle("i18n/message", locale);
             }
             CronDescriptor descriptor = new CronDescriptor(resourceBundle);
             String  crontext = descriptor.describe(parser.parse(expression));

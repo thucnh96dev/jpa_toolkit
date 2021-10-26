@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -48,4 +49,14 @@ public abstract class AbstractAPI {
         }
         return request.getRemoteAddr();
     }
+
+    protected Locale VIETNAM;
+    protected Locale DEFAULT;
+
+    {
+        VIETNAM = new Locale("vi", "VN");
+        DEFAULT = Locale.getDefault();
+    }
+
+
 }
