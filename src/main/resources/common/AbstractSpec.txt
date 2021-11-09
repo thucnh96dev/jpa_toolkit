@@ -1,0 +1,20 @@
+import lombok.Data;
+import org.springframework.data.jpa.domain.Specification;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.Map;
+
+${projectAUthor}
+@Data
+public abstract class AbstractSpec<T> implements Specification<T>  {
+
+    private Map<String, Object> params;
+
+    public AbstractSpec(Map<String, Object> params){
+        this.params = params;
+    }
+
+    public abstract Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) ;
+}

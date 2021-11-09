@@ -1,0 +1,16 @@
+package $daoPackage;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import $entityPackage;
+import $baseDaoPackage;
+
+import java.util.List;
+$projectAUthor
+@Repository
+public interface $daoName extends BaseDao< $entityName > {
+
+
+
+}

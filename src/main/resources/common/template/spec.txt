@@ -1,0 +1,38 @@
+package ${package};
+
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.StringUtils;
+
+import ${entityPatch};
+
+${projectAUthor}
+public class ${entityName}Spec implements Specification<${entityName}>{
+
+	${bodySpec1}
+    public CongViecSpec(Map<String, Object> filter) {
+    ${bodySpec2}
+    }
+
+    @Override
+    public Predicate toPredicate(Root<${entityName}> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+
+        List<Predicate> predicates = new LinkedList<>();
+        List<Predicate> predicatesOr = new LinkedList<>();
+        ${bodySpec3}
+        if(predicatesOr.size() > 0){
+               Predicate predicateAllOr = cb.or(predicatesOr.toArray(new Predicate[]{}));
+               predicates.add(predicateAllOr);
+        }
+     return cb.and(predicates.toArray(new Predicate[]{}));
+    }
+}

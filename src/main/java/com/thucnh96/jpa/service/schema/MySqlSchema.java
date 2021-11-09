@@ -1,8 +1,11 @@
 package com.thucnh96.jpa.service.schema;
 
+import com.thucnh96.jpa.connector.DDLConnection;
 import com.thucnh96.jpa.constants.JpaConstants;
 import com.thucnh96.jpa.modal.Column;
+import com.thucnh96.jpa.modal.DbType;
 import com.thucnh96.jpa.modal.Table;
+import com.thucnh96.jpa.modal.payload.ProjectIto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,16 +15,17 @@ import java.util.List;
 
 public class MySqlSchema implements Schema {
 
-    private  Connection connection;
-
-    public MySqlSchema( Connection connection){
-        this.connection = connection;
+    private ProjectIto projectIto;
+    public MySqlSchema( ProjectIto projectIto){
+        this.projectIto = projectIto;
     }
 
     @Override
     public List<Table> getTables() throws Exception {
         List<Table> tables = new ArrayList<>();
+        Connection connection = null;
         try {
+            connection = DDLConnection.getConnection(projectIto.getUrl(),projectIto.getUsername(),projectIto.getPassword());
             String query = JpaConstants.mysqlQueryTable;
             PreparedStatement st = connection.prepareStatement(query);
             ResultSet rs = st.executeQuery();
@@ -45,16 +49,21 @@ public class MySqlSchema implements Schema {
                     table.getColums().add(colum);
                 }
             }
-            rs.close();
-            st.close();
-            connection.close();
+            DDLConnection.closeResultSet(rs);
+            DDLConnection.closePreparedStatement(st);
+            DDLConnection.closeConnection(connection);
         }catch (Exception e){
             e.printStackTrace();
         }finally {
             if (connection != null){
-                connection.close();
+                DDLConnection.closeConnection(connection);
             }
         }
         return tables;
+    }
+
+    @Override
+    public String getOrmName() {
+        return DbType.MYSQL.name();
     }
 }

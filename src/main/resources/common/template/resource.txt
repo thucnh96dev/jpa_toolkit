@@ -1,0 +1,67 @@
+package ${package};
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ${entityName};
+import ${servicePath};
+import ${payloadPatch};
+import ${abstractAPIPatch};
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+${projectAUthor}
+
+@RestController
+@RequestMapping(value = "${api}")
+public class ${entityName}Resource extends AbstractAPI {
+
+    @Autowired
+    private ${entityName}Service baseService;
+
+    @PostMapping("/find")
+    public ResponseEntity<Object> getAll(@RequestBody ${entityName}FQPIto paramIto){
+        Map<String, Object> result = new HashMap<>();
+        Page<${entityName}> data = baseService.findAll(paramIto);
+        result.put("entities",data);
+        result.put("total",data.getTotalElements());
+        return  toResponse(result);
+    }
+
+    @PostMapping()
+    public ResponseEntity<Object> save(@RequestBody ${entityName}Ito paramIto){
+        Map<String, Object> result = new HashMap<>();
+        ${entityName} entity = (${entityName}) baseService.save(paramIto);
+        result.put("item",entity);
+        return  toResponse(result);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Object> update(@PathVariable("id") long id, @RequestBody ${entityName}Ito paramIto){
+        Map<String, Object> result = new HashMap<>();
+        ${entityName} entity = (${entityName}) baseService.save(paramIto);
+        result.put("item",entity);
+        return  toResponse(result);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Object> delete(@PathVariable("id") long id){
+        Map<String, Object> result = new HashMap<>();
+        baseService.delete(id);
+        result.put("msg","delete");
+        return  toResponse(result);
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<Object> deletes(@PathVariable("id") Set<Long> ids){
+        Map<String, Object> result = new HashMap<>();
+        baseService.deletes(ids);
+        result.put("msg","deletes");
+        return  toResponse(result);
+    }
+
+}

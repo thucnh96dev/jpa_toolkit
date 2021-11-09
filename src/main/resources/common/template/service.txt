@@ -1,0 +1,50 @@
+package $servicePackage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import $entityPackage;
+import $daoPackage;
+import $baseServicePackage;
+import $payloadPackage;
+import $specPackage;
+
+import java.util.List;
+import java.util.Optional;
+
+$projectAUthor
+@Service
+public class $serviceName extends BaseService<$entityName> {
+
+    @Autowired
+    private  $daoName baseDAO;
+
+    /**
+     *
+     * @param id
+     * @return FileVM
+     */
+    public Optional<$entityName> getById(Long id){
+        return baseDAO.findById(id);
+    }
+
+    /**
+     *
+     * @param ito
+     * @return
+     */
+    public entityName save($itoName ito ){
+        $entityName entity = DTOmapper.map(ito,$entityName.class);
+        return baseDAO.save(entity);
+    }
+
+    /**
+     *
+     * @param params
+     * @return Page
+     */
+    public Page<$entityName> findAll($entityNameFQPIto params){
+        return this.findAllPageable(params,new $entityNameSpec(params.getQueryParams().getFilter()));
+    }
+
+}

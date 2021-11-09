@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface Schema {
     List<Table> getTables() throws Exception;
+    String getOrmName();
 }

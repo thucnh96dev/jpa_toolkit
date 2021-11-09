@@ -30,9 +30,13 @@ public class ProjectIto {
     private String password;
 
     private String url;
+    private String payloadFolder;
 
     @NonNull
     private String type;
+
+    @NonNull
+    private String author;
 
     private String path;
 

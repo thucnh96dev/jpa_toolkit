@@ -1,0 +1,11 @@
+package {package};
+import java.util.*;
+import lombok.*;
+
+{projectAUthor}
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class {entityName}Dto{
+{dtoBody}
+}
