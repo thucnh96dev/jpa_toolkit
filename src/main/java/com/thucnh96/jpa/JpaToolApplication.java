@@ -8,14 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class JpaToolApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		SpringApplication.run(JpaToolApplication.class, args);
 	}
-//	@Bean
-//	public MessageSource messageSource() {
-//		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-//		messageSource.setBasename("classpath:message");
-//		messageSource.setCacheSeconds(10); //reload messages every 10 seconds
-//		return messageSource;
-//	}
 }

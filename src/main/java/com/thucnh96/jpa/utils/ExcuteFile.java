@@ -36,7 +36,10 @@ public class ExcuteFile {
 	        myWriter.write(fileContent);
 	        myWriter.close();
 	        String message = "Generator ".concat("file: ").concat(fileName).concat(".java");
-	        pushMessageService.sendMessage(message);
+			if(null != pushMessageService){
+				pushMessageService.sendMessage(message);
+			}
+
 	    }
 	  /**
 	   * 

@@ -1,5 +1,7 @@
 package com.thucnh96.jpa.connector;
 
+import com.thucnh96.jpa.exeption.JpaApiExeption;
+
 import java.sql.*;
 
 public class DDLConnection {
@@ -7,12 +9,14 @@ public class DDLConnection {
 	private DDLConnection(){
 	}
 	
-	public static Connection getConnection(String url,String userName,String passWord) throws SQLException {
-		Connection connection = DriverManager.getConnection(url,userName,passWord);
-		if (null != connection){
+	public static Connection getConnection(String url,String userName,String passWord)  {
+		Connection connection = null;
+		try {
+			connection = DriverManager.getConnection(url,userName,passWord);
 			return connection;
+		} catch (SQLException e) {
+			throw  new JpaApiExeption(e);
 		}
-		return  null;
 	}
 
 	public static void closeConnection(Connection connection) throws SQLException {

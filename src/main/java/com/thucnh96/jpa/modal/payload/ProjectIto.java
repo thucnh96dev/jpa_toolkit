@@ -43,4 +43,6 @@ public class ProjectIto {
     private String projectName;
 
     private boolean genDoc;
+    private String prefix;
+    private String subfix;
 }
