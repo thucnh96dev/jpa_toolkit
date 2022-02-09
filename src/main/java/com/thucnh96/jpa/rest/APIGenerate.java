@@ -12,9 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
@@ -34,6 +33,15 @@ public class APIGenerate {
         return "index";
     }
 
+    @GetMapping(value = "/generate/map")
+    @ResponseBody
+    public Map<String, Object> view(@ModelAttribute SearchIto searchIto){
+        Map<String, Object> result = new HashMap<>();
+        result.put("soft",searchIto);
+        return result;
+    }
+
+
     @PostMapping(value = "/generate")
     public void view(@RequestBody ProjectIto project, HttpServletResponse response)  {
         String uuidFolder = UUID.randomUUID().toString();
@@ -47,6 +55,8 @@ public class APIGenerate {
             pushMessageService.sendMessage(e.getMessage());
         }
     }
+
+
 
     private void projectZip(String folderTemp,String projectName,HttpServletResponse response) throws IOException {
         String projectNameFolder = StringUtils.isEmpty(projectName) ? "project.zip" : projectName.trim().concat(".zip");

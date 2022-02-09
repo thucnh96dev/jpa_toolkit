@@ -1,11 +1,5 @@
 package com.thucnh96.jpa.service.orm;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.util.List;
-
 import com.thucnh96.jpa.component.CommonSource;
 import com.thucnh96.jpa.connector.DataSourceConnector;
 import com.thucnh96.jpa.constants.JpaConstants;
@@ -13,10 +7,11 @@ import com.thucnh96.jpa.converter.AbstractOrmMappingDataConverter;
 import com.thucnh96.jpa.modal.Table;
 import com.thucnh96.jpa.modal.payload.ProjectIto;
 import com.thucnh96.jpa.service.PushMessageService;
-import com.thucnh96.jpa.service.doc.GenDocument;
 import com.thucnh96.jpa.service.schema.Schema;
 import com.thucnh96.jpa.service.schema.SchemaFactory;
-import org.apache.poi.ss.usermodel.Workbook;
+
+import java.sql.Connection;
+import java.util.List;
 
 /**
  * 
@@ -51,22 +46,22 @@ public class PostgresOrmGenerate extends AbstractOrmGenerate {
 		}
 		CommonSource commonSource = new CommonSource(this.path,this.project.getPackages());
 		commonSource.run();
-		if (project.isGenDoc()){
-			try {
-				Workbook workbook = new GenDocument(tables).genDoc();
-				String fullPatchFile = this.path.concat("/").concat("document").concat("/").concat("database").concat(".xlsx");
-				String dirFolder = Paths.get(this.path, "document").toString();
-				File fileDir = new File(dirFolder);
-				if (!fileDir.exists()) {
-					fileDir.mkdirs();
-				}
-				File file = new File(fullPatchFile);
-				FileOutputStream outFile = new FileOutputStream(file);
-				workbook.write(outFile);
-			}catch (Exception e){
-				e.printStackTrace();
-			}
-		}
+//		if (project.isGenDoc()){
+//			try {
+//				Workbook workbook = new GenDocument(tables).genDoc();
+//				String fullPatchFile = this.path.concat("/").concat("document").concat("/").concat("database").concat(".xlsx");
+//				String dirFolder = Paths.get(this.path, "document").toString();
+//				File fileDir = new File(dirFolder);
+//				if (!fileDir.exists()) {
+//					fileDir.mkdirs();
+//				}
+//				File file = new File(fullPatchFile);
+//				FileOutputStream outFile = new FileOutputStream(file);
+//				workbook.write(outFile);
+//			}catch (Exception e){
+//				e.printStackTrace();
+//			}
+//		}
 	 }
 
 }
