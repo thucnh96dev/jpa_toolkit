@@ -1,0 +1,12 @@
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+public abstract class ThrowableValidator<INPUT, EXEPION extends Exception> implements IValidator<INPUT, EXEPION> {
+
+    @Autowired
+    @Qualifier("existingValidator")
+    protected ExistingValidator existingValidator;
+
+    @Override
+    public abstract void validate(INPUT input) throws EXEPION;
+}

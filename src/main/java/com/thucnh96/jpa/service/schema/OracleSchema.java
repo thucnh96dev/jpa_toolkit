@@ -7,7 +7,7 @@ import java.util.List;
 public class OracleSchema implements Schema {
 
     @Override
-    public List<Table> getTables() {
+    public List<Table> getTables(String tabalePrefix) {
         return null;
     }
 }

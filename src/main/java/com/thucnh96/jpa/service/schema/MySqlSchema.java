@@ -19,7 +19,7 @@ public class MySqlSchema implements Schema {
     }
 
     @Override
-    public List<Table> getTables() throws Exception {
+    public List<Table> getTables(String tabalePrefix) throws Exception {
         List<Table> tables = new ArrayList<>();
         try {
             String query = JpaConstants.mysqlQueryTable;

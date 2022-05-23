@@ -5,5 +5,5 @@ import com.thucnh96.jpa.modal.Table;
 import java.util.List;
 
 public interface Schema {
-    List<Table> getTables() throws Exception;
+    List<Table> getTables(String regex) throws Exception;
 }

@@ -38,5 +38,7 @@ public class ProjectIto {
 
     private String projectName;
 
+    private String tablePrefix;
+
     private boolean genDoc;
 }

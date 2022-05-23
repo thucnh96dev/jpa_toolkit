@@ -77,13 +77,14 @@ public abstract class AbstractOrmGenerate {
         buffer.append(headerEntity(packageProject,table.getName(),entityFolder));
         for (Column colum: table.getColums()){
             if ("PRI".equals(colum.getKey())) { // mysql
-                buffer.append("   ").append(JpaAnotation.Id).append("\n");
+                buffer.append("   ").append(JpaAnotation.Id);
                 buffer.append("   ").append("@GeneratedValue(strategy = GenerationType.IDENTITY)").append("\n");
             }
             if (!StringUtils.isEmpty(colum.getFieldName()) && "id".equals(colum.getFieldName().toLowerCase())) { // mysql
-                buffer.append("   ").append(JpaAnotation.Id).append("\n");
+                buffer.append("   ").append(JpaAnotation.Id);
             }
-            if (!StringUtils.isEmpty(colum.getDefaultValue()) && colum.getDefaultValue().contains("::regclass")) { // mysql
+            if (!StringUtils.isEmpty(colum.getDefaultValue()) && colum.getDefaultValue().contains("nextval")) { // postgres
+                System.out.println("Vua MUON THU");
                 buffer.append("   ").append(JpaAnotation.GenerationType).append("\n");
             }
             if ("auto_increment".equals(colum.getExtra())) {
@@ -146,6 +147,33 @@ public abstract class AbstractOrmGenerate {
        ExcuteFile.createFile(this.path,itoFolder,tbNameSp(table.getName()).concat("Ito"),buffer.toString(),pushMessageService);
        ExcuteFile.createFile(this.path,itoFolder,tbNameSp(table.getName()).concat("Dto"),bufferDto.toString(),pushMessageService);
        ExcuteFile.createFile(this.path,itoFolder,tbNameSp(table.getName()).concat("FQPIto"),bufferFQ.toString(),pushMessageService);
+    }
+
+    protected  void bodyValidator(Table table,String packageProject,String validatorFolder) throws IOException {
+
+        StringBuffer bufferValidator = new StringBuffer();
+        bufferValidator.append("package ").append(packageProject).append(".").append(validatorFolder).append(";").append("\n")
+                .append("import ").append(packageProject).append(".dto.").append(tbNameSp(table.getName())).append("Ito;").append("\n")
+                .append("import org.springframework.stereotype.Component;").append("\n")
+                .append("import ").append(packageProject).append(".validator.base.ThrowableValidator;").append("\n")
+                .append(" /**").append("\n")
+                .append(" * validator "+tbNameSp(table.getName())+"validator.").append("\n")
+                .append(" * Author thucnh .").append("\n")
+                .append(" * Create at "+title()+" ").append(".").append("\n")
+                .append(" */ ").append("\n")
+                .append("\n")
+                .append("@Component(\"userValidator\")").append("\n")
+                .append("public class "+tbNameSp(table.getName())+"Validator extends ThrowableValidator<"+tbNameSp(table.getName())+"Ito, IllegalArgumentException> {")
+                .append("\n")
+                .append("\n")
+                .append("\n")
+                .append("@Override").append("\n")
+                .append("public void validate("+tbNameSp(table.getName())+"Ito ito) throws IllegalArgumentException {")
+                .append("\n")
+                .append("}").append("\n");
+
+        bufferValidator.append("}");
+        ExcuteFile.createFile(this.path,validatorFolder,tbNameSp(table.getName()).concat("Validator"),bufferValidator.toString(),pushMessageService);
     }
 
     protected  void bodySpec(Table table,String packageProject,String entitiFoler,String specFolder) throws IOException {

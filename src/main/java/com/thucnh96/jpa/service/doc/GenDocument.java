@@ -6,7 +6,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.util.List;
@@ -23,8 +22,23 @@ public class GenDocument {
         try {
             int rowCount = 0;
             for (Table table : this.tables){
-                for (Column column : table.getColums()) {
                     Row row = sheet.createRow(rowCount);
+                    Cell index =  row.createCell(0);
+                    Cell tableName =  row.createCell(1);
+                    index.setCellValue(rowCount);
+                    tableName.setCellValue(table.getName());
+                    rowCount ++;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Sheet sheet1 = workbook.createSheet("DATABASE1");
+        try {
+            int rowCount = 0;
+            for (Table table : this.tables){
+                for (Column column : table.getColums()) {
+                    Row row = sheet1.createRow(rowCount);
                     Cell index =  row.createCell(0);
                     Cell tableName =  row.createCell(1);
                     Cell columnName =  row.createCell(2);

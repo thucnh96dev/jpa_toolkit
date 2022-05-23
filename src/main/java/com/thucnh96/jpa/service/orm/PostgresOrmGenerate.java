@@ -7,9 +7,14 @@ import com.thucnh96.jpa.converter.AbstractOrmMappingDataConverter;
 import com.thucnh96.jpa.modal.Table;
 import com.thucnh96.jpa.modal.payload.ProjectIto;
 import com.thucnh96.jpa.service.PushMessageService;
+import com.thucnh96.jpa.service.doc.GenDocument;
 import com.thucnh96.jpa.service.schema.Schema;
 import com.thucnh96.jpa.service.schema.SchemaFactory;
+import org.apache.poi.ss.usermodel.Workbook;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.List;
 
@@ -34,7 +39,7 @@ public class PostgresOrmGenerate extends AbstractOrmGenerate {
 	public void genProgress() throws Exception {
 		Connection connection = DataSourceConnector.getConnection(project.getUrl(),project.getUsername(),project.getPassword());
 		Schema postgresSchema = SchemaFactory.getSchema(JpaConstants.DbType.POSTGRES,connection);
-		List<Table>	tables = postgresSchema.getTables();
+		List<Table>	tables = postgresSchema.getTables(project.getTablePrefix());
 		for (Table table : tables){
 			this.bodyItoAndDto(table,this.project.getPackages(),this.project.getDtoFolder());
 			this.bodyEntity(table,this.project.getPackages(),this.project.getEntityFolder());
@@ -43,25 +48,26 @@ public class PostgresOrmGenerate extends AbstractOrmGenerate {
 			this.bodyService(table,this.project.getPackages(),this.project.getServiceFolder(),this.project.getEntityFolder(),this.project.getDtoFolder());
 			this.bodyServiceImpl(table,this.project.getPackages(),this.project.getServiceFolder(),this.project.getRepositoryFolder(),this.project.getEntityFolder(),this.project.getDtoFolder(),this.project.getSepcFolder());
 			this.bodyController(table,this.project.getPackages(),this.project.getRestFolder(),this.project.getServiceFolder(),this.project.getEntityFolder(),this.project.getDtoFolder());
+			this.bodyValidator(table,this.project.getPackages(),"validator");
 		}
 		CommonSource commonSource = new CommonSource(this.path,this.project.getPackages());
 		commonSource.run();
-//		if (project.isGenDoc()){
-//			try {
-//				Workbook workbook = new GenDocument(tables).genDoc();
-//				String fullPatchFile = this.path.concat("/").concat("document").concat("/").concat("database").concat(".xlsx");
-//				String dirFolder = Paths.get(this.path, "document").toString();
-//				File fileDir = new File(dirFolder);
-//				if (!fileDir.exists()) {
-//					fileDir.mkdirs();
-//				}
-//				File file = new File(fullPatchFile);
-//				FileOutputStream outFile = new FileOutputStream(file);
-//				workbook.write(outFile);
-//			}catch (Exception e){
-//				e.printStackTrace();
-//			}
-//		}
+		if (project.isGenDoc()){
+			try {
+				Workbook workbook = new GenDocument(tables).genDoc();
+				String fullPatchFile = this.path.concat("/").concat("document").concat("/").concat("database").concat(".xlsx");
+				String dirFolder = Paths.get(this.path, "document").toString();
+				File fileDir = new File(dirFolder);
+				if (!fileDir.exists()) {
+					fileDir.mkdirs();
+				}
+				File file = new File(fullPatchFile);
+				FileOutputStream outFile = new FileOutputStream(file);
+				workbook.write(outFile);
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
 	 }
 
 }

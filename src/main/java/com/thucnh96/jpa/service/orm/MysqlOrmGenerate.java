@@ -1,11 +1,5 @@
 package com.thucnh96.jpa.service.orm;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.util.List;
-
 import com.thucnh96.jpa.component.CommonSource;
 import com.thucnh96.jpa.connector.DataSourceConnector;
 import com.thucnh96.jpa.constants.JpaConstants;
@@ -17,6 +11,12 @@ import com.thucnh96.jpa.service.doc.GenDocument;
 import com.thucnh96.jpa.service.schema.Schema;
 import com.thucnh96.jpa.service.schema.SchemaFactory;
 import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.util.List;
 
 /**
  * 
@@ -39,7 +39,7 @@ public class MysqlOrmGenerate extends AbstractOrmGenerate {
 	public void genProgress() throws Exception {
 		Connection connection = DataSourceConnector.getConnection(project.getUrl(),project.getUsername(),project.getPassword());
 		Schema mysqlSchema = SchemaFactory.getSchema(JpaConstants.DbType.MYSQL,connection);
-	    List<Table>	tables = mysqlSchema.getTables();
+	    List<Table>	tables = mysqlSchema.getTables(project.getTablePrefix());
 		for (Table table : tables){
 			this.bodyItoAndDto(table,this.project.getPackages(),this.project.getDtoFolder());
 			this.bodyEntity(table,this.project.getPackages(),this.project.getEntityFolder());

@@ -53,6 +53,7 @@ public class APIGenerate {
             projectZip(folderTemp,project.getProjectName(),response);
         }catch (Exception e){
             pushMessageService.sendMessage(e.getMessage());
+            e.printStackTrace();
         }
     }
 
